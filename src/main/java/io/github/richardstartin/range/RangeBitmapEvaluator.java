@@ -25,7 +25,7 @@ public class RangeBitmapEvaluator implements RangeEvaluator {
 
   @Override
   public RoaringBitmap between(long min, long max) {
-    return bitmap.lte(max, bitmap.gte(min));
+    return bitmap.between(min, max);
   }
 
   @Override
