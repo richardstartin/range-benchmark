@@ -7,7 +7,7 @@ import org.roaringbitmap.RoaringBitmap;
 import java.util.Arrays;
 import java.util.function.LongSupplier;
 
-public class RangeEvaluationBenchmark {
+  public class RangeEvaluationBenchmark {
 
   @State(Scope.Benchmark)
   public static abstract class BaseState<T extends RangeEvaluator> {
@@ -105,6 +105,15 @@ public class RangeEvaluationBenchmark {
     }
   }
 
+  @State(Scope.Benchmark)
+  public static class SortedValuesUnsortedIndexesState extends BaseState<SortedValuesUnsortedIndexesEvaluator> {
+
+    @Override
+    protected SortedValuesUnsortedIndexesEvaluator create() {
+      return new SortedValuesUnsortedIndexesEvaluator(values);
+    }
+  }
+
 
   @Benchmark
   public void rangeBitmap(RangeBitmapState state, Blackhole bh, Counters counters) {
@@ -128,6 +137,11 @@ public class RangeEvaluationBenchmark {
 
   @Benchmark
   public void invertedIndex(InvertedIndexState state, Blackhole bh, Counters counters) {
+    evaluate(bh, state.evaluator, state.min, state.max, state.cardinality, counters);
+  }
+
+  @Benchmark
+  public void sortedValuesUnsortedIndexes(SortedValuesUnsortedIndexesState state, Blackhole bh, Counters counters) {
     evaluate(bh, state.evaluator, state.min, state.max, state.cardinality, counters);
   }
 

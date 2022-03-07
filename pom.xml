@@ -34,10 +34,9 @@
         <dependency>
             <groupId>org.roaringbitmap</groupId>
             <artifactId>RoaringBitmap</artifactId>
-            <version>0.9.22</version>
+            <version>0.9.25</version>
             <scope>compile</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
