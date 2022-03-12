@@ -1,0 +1,6 @@
+"Benchmark","Mode","Threads","Samples","Score","Score Error (99.9%)","Unit","Param: minPrice","Param: minQuantity","Param: size"
+"io.github.richardstartin.range.FindTransactionsBenchmark.binarySearch","avgt",1,5,1204.366198,8.455373,"us/op",100,1,1000000
+"io.github.richardstartin.range.FindTransactionsBenchmark.binarySearchThenIndex","avgt",1,5,82.893010,12.486953,"us/op",100,1,1000000
+"io.github.richardstartin.range.FindTransactionsBenchmark.index","avgt",1,5,690.562119,25.725005,"us/op",100,1,1000000
+"io.github.richardstartin.range.FindTransactionsBenchmark.stream1","avgt",1,5,8885.846120,41.192708,"us/op",100,1,1000000
+"io.github.richardstartin.range.FindTransactionsBenchmark.stream2","avgt",1,5,3859.494033,42.012070,"us/op",100,1,1000000
