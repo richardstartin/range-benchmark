@@ -1,15 +1,23 @@
 package io.github.richardstartin.range;
 
-import org.openjdk.jmh.annotations.*;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.SplittableRandom;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 import org.roaringbitmap.IntConsumer;
 import org.roaringbitmap.RangeBitmap;
 import org.roaringbitmap.RoaringBitmap;
 
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.util.*;
-import java.util.function.ToLongFunction;
 
 public class FindTransactionsBenchmark {
 
@@ -49,29 +57,44 @@ public class FindTransactionsBenchmark {
         transactions.add(randomTransaction(time));
         time += nextTransactionTime();
       }
-      timestampIndex = index(Transaction::getTimestamp);
-      quantityIndex = index(Transaction::getQuantity);
-      priceIndex = index(Transaction::getPrice);
 
       minTimeThreshold = transactions.get((size * 5) / 10).timestamp;
       maxTimeThreshold = transactions.get((size * 6) / 10).timestamp;
       minQuantityThreshold = (minQuantity + transactions.get(size / 2).quantity) / 2;
       maxPriceThreshold = (minPrice + transactions.get(size / 2).quantity) / 2;
+
+      index();
     }
 
-    private RangeBitmap index(ToLongFunction<Transaction> extractor) {
-      long min = Long.MAX_VALUE;
-      long max = Long.MIN_VALUE;
+    private void index() {
+      long minTimestamp = Long.MAX_VALUE;
+      long maxTimestamp = Long.MIN_VALUE;
+      long minPrice = Long.MAX_VALUE;
+      long maxPrice = Long.MIN_VALUE;
+      int minQty = Integer.MAX_VALUE;
+      int maxQty = Integer.MIN_VALUE;
       for (Transaction transaction : transactions) {
-        long value = extractor.applyAsLong(transaction);
-        min = Math.min(min, value);
-        max = Math.max(max, value);
+        minTimestamp = Math.min(minTimestamp, transaction.getTimestamp());
+        maxTimestamp = Math.max(maxTimestamp, transaction.getTimestamp());
+        minPrice = Math.min(minPrice, transaction.getPrice());
+        maxPrice = Math.max(maxPrice, transaction.getPrice());
+        minQty = Math.min(minQty, transaction.getQuantity());
+        maxQty = Math.max(maxQty, transaction.getQuantity());
       }
-      RangeBitmap.Appender appender = RangeBitmap.appender(max - min);
+      var timestampAppender = RangeBitmap.appender(maxTimestamp - minTimestamp);
+      var priceAppender = RangeBitmap.appender(maxPrice - minPrice);
+      var qtyAppender = RangeBitmap.appender(maxQty - minQty);
       for (Transaction transaction : transactions) {
-        appender.add(extractor.applyAsLong(transaction) - min);
+        timestampAppender.add(transaction.getTimestamp() - minTimestamp);
+        priceAppender.add(transaction.getPrice() - minPrice);
+        qtyAppender.add(transaction.getQuantity() - minQty);
       }
-      return appender.build();
+      timestampIndex = timestampAppender.build();
+      priceIndex = priceAppender.build();
+      quantityIndex = qtyAppender.build();
+      this.minTime = minTimestamp;
+      this.minQuantity = minQty;
+      this.minPrice = minPrice;
     }
 
     private long nextTransactionTime() {
