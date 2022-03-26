@@ -1,0 +1,8 @@
+"Benchmark","Mode","Threads","Samples","Score","Score Error (99.9%)","Unit","Param: minPrice","Param: minQuantity","Param: size"
+"io.github.richardstartin.range.CountTransactionsBenchmark.binarySearch","avgt",1,5,786.482285,1.994657,"us/op",100,1,1000000
+"io.github.richardstartin.range.CountTransactionsBenchmark.binarySearchBranchFreeScan","avgt",1,5,299.725900,2.414697,"us/op",100,1,1000000
+"io.github.richardstartin.range.CountTransactionsBenchmark.binarySearchThenIndex","avgt",1,5,78.191544,17.903472,"us/op",100,1,1000000
+"io.github.richardstartin.range.CountTransactionsBenchmark.index","avgt",1,5,666.951907,14.861610,"us/op",100,1,1000000
+"io.github.richardstartin.range.CountTransactionsBenchmark.stream1","avgt",1,5,9721.806835,27.935884,"us/op",100,1,1000000
+"io.github.richardstartin.range.CountTransactionsBenchmark.stream2","avgt",1,5,3283.291345,44.566458,"us/op",100,1,1000000
+"io.github.richardstartin.range.CountTransactionsBenchmark.stream2Polluted","avgt",1,5,7801.823477,41.229256,"us/op",100,1,1000000

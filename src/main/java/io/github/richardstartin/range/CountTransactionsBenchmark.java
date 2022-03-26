@@ -100,7 +100,7 @@ public class CountTransactionsBenchmark {
     long count = 0;
     for (int i = first; i <= last; i++) {
       Transaction transaction = state.transactions.get(i);
-      count += (Math.max(transaction.quantity - qty, 0) + Math.max(price - transaction.price, 0)) >>> 1;
+      count += (Math.min(1, Math.max(transaction.quantity - qty, 0)) + Math.min(1, Math.max(price - transaction.price, 0))) >>> 1;
     }
     return count;
   }
